@@ -471,3 +471,108 @@ Ao final:
 
 - **Resultado gerado:** Implementação da chamada real ao Ollama em `/api/analyze`, criação de funções auxiliares para prompt, cliente Ollama e parsing da análise, ampliação dos tipos TypeScript e atualização do frontend para exibir análise real ou mensagens de erro compreensíveis.
 
+### Prompt 005 - Testes automatizados
+
+- **Data:** 2026-05-29
+- **Ferramenta utilizada:** Codex CLI
+- **Etapa do desenvolvimento:** Testes automatizados
+- **Objetivo:** Adicionar pelo menos 5 testes automatizados ao projeto.
+- **Prompt utilizado:**
+
+````text
+Você é um assistente sênior de engenharia de software especializado em Next.js, TypeScript, testes automatizados, Vitest, React Testing Library e boas práticas de qualidade.
+
+Contexto:
+Estou desenvolvendo um projeto avaliativo chamado IdeaCheck AI. A aplicação permite que o usuário informe uma ideia de negócio e receba uma análise estruturada gerada por IA local via Ollama.
+
+Antes de executar a tarefa, leia os arquivos:
+
+* docs/PRD.md
+* docs/ARQUITETURA.md
+* docs/FLUXOGRAMA.md
+* prompts.md
+* package.json
+* app/
+* components/
+* lib/
+* types/
+
+Use esses arquivos como fonte de verdade para entender o escopo e a estrutura atual do projeto.
+
+Tecnologias do projeto:
+
+* Next.js
+* TypeScript
+* Tailwind CSS
+* Ollama como LLM local
+* Modelo sugerido: llama3.2:3b
+* Execução local, sem deploy obrigatório
+
+Tarefa atual:
+Adicionar pelo menos 5 testes automatizados ao projeto.
+
+Requisitos:
+
+1. Verifique a estrutura atual do projeto antes de alterar arquivos.
+2. Se ainda não houver estrutura de testes, configure Vitest, React Testing Library e jsdom.
+3. Adicione scripts de teste ao `package.json`, se necessário.
+4. Crie pelo menos 5 testes automatizados cobrindo os principais comportamentos da aplicação.
+5. Atualize `prompts.md` registrando este prompt como uma nova entrada.
+
+Testes mínimos esperados:
+
+1. Testar se o formulário principal da aplicação é renderizado.
+2. Testar se o envio é impedido quando o campo de ideia está vazio.
+3. Testar se a aplicação exibe estado de carregamento ao enviar uma ideia válida.
+4. Testar se o frontend chama a rota `/api/analyze` com a ideia digitada.
+5. Testar se a análise retornada pela API é exibida corretamente na interface.
+
+Se a estrutura atual permitir, adicione também:
+6. Teste da rota `/api/analyze` retornando erro 400 quando a ideia estiver vazia.
+7. Teste da rota `/api/analyze` tratando erro quando o Ollama estiver indisponível.
+
+Observações importantes:
+
+* É permitido usar mocks nos testes para simular `fetch` e respostas da API.
+* Não criar resposta mockada no comportamento de produção da aplicação.
+* Não remover a integração real com Ollama.
+* Não alterar o fluxo funcional da aplicação.
+* Não modificar a documentação de produto, arquitetura ou fluxograma, salvo correção mínima necessária.
+* Não criar login, banco de dados, histórico ou dashboard.
+* Manter textos dos testes e descrições em português ou inglês de forma consistente.
+* Manter o código simples, legível e fácil de manter.
+* Priorizar testes estáveis, rápidos e objetivos.
+
+Configuração esperada, se ainda não existir:
+
+* `vitest`
+* `@testing-library/react`
+* `@testing-library/jest-dom`
+* `@testing-library/user-event`
+* `jsdom`
+
+Scripts esperados no `package.json`, se ainda não existirem:
+
+* `test`
+* `test:watch`
+* opcionalmente `test:coverage`
+
+No arquivo `prompts.md`, registre este prompt seguindo a estrutura existente:
+
+* Data
+* Ferramenta utilizada: Codex CLI
+* Etapa do desenvolvimento: Testes automatizados
+* Objetivo: Adicionar pelo menos 5 testes automatizados ao projeto
+* Prompt utilizado
+* Resultado gerado
+
+Ao final:
+
+1. Informe quais arquivos foram criados ou alterados.
+2. Informe o comando para rodar os testes.
+3. Informe quantos testes foram adicionados.
+4. Sugira uma mensagem de commit curta seguindo Conventional Commits.
+````
+
+- **Resultado gerado:** Configuração do Vitest com jsdom e React Testing Library, adição dos scripts `test` e `test:watch`, criação de 7 testes automatizados cobrindo formulário, validação de ideia vazia, estado de carregamento, chamada para `/api/analyze`, exibição da análise e erros da rota `/api/analyze`.
+
