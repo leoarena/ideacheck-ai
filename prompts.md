@@ -229,3 +229,115 @@ Ao final, sugira uma mensagem de commit curta seguindo Conventional Commits.
 
 - **Resultado gerado:** Criação de `docs/ARQUITETURA.md` com visão arquitetural, componentes, responsabilidades, fluxo de comunicação e diagrama UML em Mermaid; criação de `docs/FLUXOGRAMA.md` com fluxo principal, erro de Ollama indisponível e validação de ideia vazia; atualização deste registro em `prompts.md`.
 
+### Prompt 003 - Estrutura inicial do projeto Next.js
+
+- **Data:** 2026-05-28
+- **Ferramenta utilizada:** Codex CLI
+- **Etapa do desenvolvimento:** Estrutura inicial do projeto
+- **Objetivo:** Criar a estrutura inicial funcional do projeto Next.js com TypeScript e Tailwind CSS, preparada para futura integração com Ollama, sem implementar resposta simulada de IA.
+- **Prompt utilizado:**
+
+```text
+Você é um assistente sênior de engenharia de software especializado em Next.js, TypeScript, arquitetura frontend e aplicações com IA.
+
+Contexto:
+Estou desenvolvendo um projeto avaliativo chamado IdeaCheck AI. A aplicação permite que o usuário informe uma ideia de negócio e receba uma análise estruturada gerada por IA.
+
+Antes de executar a tarefa, leia os arquivos:
+- docs/PRD.md
+- docs/ARQUITETURA.md, se existir
+- docs/FLUXOGRAMA.md, se existir
+- prompts.md
+
+Use esses arquivos como fonte de verdade para entender o escopo do projeto.
+
+Tecnologias planejadas:
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Ollama como LLM local
+- Modelo sugerido: llama3.2:3b
+- Execução local, sem deploy obrigatório
+
+Critérios obrigatórios relevantes nesta etapa:
+- Criar a estrutura inicial funcional da aplicação
+- Manter organização profissional de pastas
+- Preparar a aplicação para futura integração com IA via Ollama
+- Não usar resposta mockada como se fosse IA real
+- Registrar este prompt no prompts.md
+
+Tarefa atual:
+Gerar a estrutura inicial do projeto Next.js no repositório atual.
+
+A aplicação deve conter:
+1. Página inicial com apresentação breve do IdeaCheck AI
+2. Formulário para o usuário inserir uma ideia de negócio
+3. Campo textarea para a ideia
+4. Botão para solicitar análise
+5. Estado de validação para impedir envio de ideia vazia
+6. Estado visual de carregamento
+7. Área para exibição futura do resultado da análise
+8. Estrutura de componentes reutilizáveis
+9. Estrutura preparada para futura rota `/api/analyze`
+10. Estilização simples e profissional com Tailwind CSS
+
+Arquivos e estrutura esperada:
+- package.json
+- tsconfig.json
+- next.config.ts ou next.config.js
+- app/
+- app/page.tsx
+- app/layout.tsx
+- app/globals.css
+- app/api/analyze/route.ts
+- components/
+- lib/
+- types/
+- prompts.md atualizado
+
+A rota `app/api/analyze/route.ts` deve existir, mas ainda não deve implementar a chamada real ao Ollama nesta etapa.
+
+Ela deve:
+- aceitar requisições POST;
+- validar se o campo `idea` foi enviado;
+- retornar erro 400 se a ideia estiver vazia;
+- retornar erro 501 informando que a integração com Ollama será implementada na próxima etapa;
+- não retornar resposta mockada de IA.
+
+Importante:
+A integração real com Ollama será feita em uma etapa posterior. Nesta etapa, o foco é criar a base funcional e organizada da aplicação.
+
+No frontend:
+- O formulário deve chamar `/api/analyze`;
+- Se a API retornar erro 400, exibir mensagem de validação;
+- Se a API retornar erro 501, exibir uma mensagem clara informando que a integração com IA ainda será conectada na próxima etapa;
+- O código deve estar preparado para exibir a análise quando a integração for implementada.
+
+Atualize o arquivo `prompts.md` registrando este prompt seguindo a estrutura existente:
+- Data
+- Ferramenta utilizada: Codex CLI
+- Etapa do desenvolvimento: Estrutura inicial do projeto
+- Objetivo
+- Prompt utilizado
+- Resultado gerado
+
+Restrições:
+- Não apagar nem sobrescrever a documentação existente
+- Não alterar o conteúdo de docs/PRD.md, docs/ARQUITETURA.md ou docs/FLUXOGRAMA.md, salvo correção mínima necessária
+- Não implementar mock de resposta de IA
+- Não implementar ainda a chamada real ao Ollama
+- Não criar testes automatizados nesta etapa
+- Não modificar README.md nesta etapa
+- Manter textos da interface em português
+- Usar TypeScript
+- Manter o código simples, limpo e fácil de testar depois
+- Evitar funcionalidades fora do escopo, como login, banco de dados, histórico ou dashboard
+
+Ao final:
+1. Informe quais arquivos foram criados ou alterados
+2. Informe como executar a aplicação localmente
+3. Sugira uma mensagem de commit curta seguindo Conventional Commits
+```
+
+- **Resultado gerado:** Criação da estrutura inicial Next.js com TypeScript e Tailwind CSS, página inicial com formulário, componentes reutilizáveis, tipos compartilhados, utilitários de API e rota `/api/analyze` preparada para futura integração com Ollama, retornando `400` para ideia vazia e `501` para integração ainda não implementada.
+
