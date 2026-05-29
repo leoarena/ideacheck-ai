@@ -661,3 +661,141 @@ Após refatorar:
 
 - **Resultado gerado:** Refatoração do formulário, rota e helpers para separar chamada da API, mensagens, validação, serviço de análise via Ollama e componentes menores de interface; preservação do comportamento existente com testes e build passando.
 
+### Prompt 007 - Documentação do README
+
+- **Data:** 2026-05-29
+- **Ferramenta utilizada:** Codex CLI
+- **Etapa do desenvolvimento:** Documentação do README
+- **Objetivo:** Criar um README completo descrevendo o projeto, tecnologias, execução, testes, escolhas técnicas e papel funcional da IA.
+- **Prompt utilizado:**
+
+````text
+Você é um assistente sênior de engenharia de software especializado em documentação técnica, README profissional, Next.js, TypeScript, testes automatizados e aplicações com IA local.
+
+Contexto:
+Estou desenvolvendo um projeto avaliativo chamado IdeaCheck AI. A aplicação permite que o usuário informe uma ideia de negócio e receba uma análise estruturada gerada por IA local via Ollama.
+
+Antes de executar a tarefa, leia os arquivos:
+
+* docs/PRD.md
+* docs/ARQUITETURA.md
+* docs/FLUXOGRAMA.md
+* prompts.md
+* package.json
+* app/
+* components/
+* lib/
+* types/
+* tests/, se existir
+
+Use esses arquivos como fonte de verdade para documentar o projeto. Não invente funcionalidades que não existem no código atual.
+
+Tecnologias do projeto:
+
+* Next.js
+* TypeScript
+* Tailwind CSS
+* Ollama como LLM local
+* Modelo sugerido: llama3.2:3b
+* Execução local, sem deploy obrigatório
+* Testes automatizados com a stack já configurada no projeto
+
+Tarefa atual:
+Criar um `README.md` completo, claro e profissional para o projeto IdeaCheck AI.
+
+O README deve conter obrigatoriamente:
+
+1. Nome do projeto
+2. Descrição curta
+3. Problema resolvido
+4. Como a IA atua no produto
+5. Funcionalidades implementadas
+6. Tecnologias utilizadas
+7. Arquitetura geral da aplicação
+8. Fluxo de funcionamento
+9. Como instalar o projeto
+10. Como configurar e rodar o Ollama
+11. Como baixar o modelo `llama3.2:3b`
+12. Como executar a aplicação localmente
+13. Como rodar os testes automatizados
+14. Como verificar cobertura de testes, se houver script configurado
+15. Estrutura de pastas do projeto
+16. Escolhas técnicas
+17. Limitações conhecidas
+18. Escopo futuro
+19. Documentação complementar
+20. Evidências de uso de IA no desenvolvimento
+21. Observação sobre execução sem deploy obrigatório
+
+A seção “Como a IA atua no produto” deve deixar claro que:
+
+* A IA não foi usada apenas para gerar código.
+* A IA tem papel funcional dentro da aplicação.
+* O usuário envia uma ideia de negócio.
+* A aplicação envia essa ideia para um LLM local via Ollama.
+* O modelo retorna uma análise estruturada contendo:
+
+  * problema que a ideia resolve;
+  * público-alvo;
+  * concorrência básica;
+  * pontos de atenção;
+  * próximos passos sugeridos;
+  * nota inicial de viabilidade, se implementada.
+
+A seção de execução local deve incluir comandos práticos, como:
+
+* instalação das dependências;
+* execução do Ollama;
+* download do modelo;
+* execução da aplicação;
+* execução dos testes.
+
+Inclua exemplos de comandos usando Markdown, por exemplo:
+
+```bash
+npm install
+ollama serve
+ollama pull llama3.2:3b
+npm run dev
+npm test
+```
+
+Se houver scripts reais no `package.json`, use exatamente os nomes existentes. Não invente scripts que não existem. Se não houver script de cobertura, apenas mencione que a cobertura é opcional ou que pode ser adicionada futuramente.
+
+Inclua uma seção de documentação complementar com links relativos para:
+
+* `docs/PRD.md`
+* `docs/ARQUITETURA.md`
+* `docs/FLUXOGRAMA.md`
+* `prompts.md`
+
+Atualize também o arquivo `prompts.md`, registrando este prompt como uma nova entrada seguindo a estrutura existente:
+
+* Data
+* Ferramenta utilizada: Codex CLI
+* Etapa do desenvolvimento: Documentação do README
+* Objetivo: Criar um README completo descrevendo o projeto, tecnologias, execução, testes, escolhas técnicas e papel funcional da IA
+* Prompt utilizado
+* Resultado gerado
+
+Restrições:
+
+* Não alterar código da aplicação nesta etapa, salvo correção mínima necessária para alinhar documentação a scripts reais.
+* Não alterar testes nesta etapa.
+* Não modificar `docs/PRD.md`, `docs/ARQUITETURA.md` ou `docs/FLUXOGRAMA.md`, salvo correção mínima de inconsistência evidente.
+* Não inventar funcionalidades não implementadas.
+* Não afirmar que existe deploy.
+* Não afirmar que a aplicação usa OpenAI, Gemini ou outra API externa.
+* Manter todo o README em português.
+* Usar Markdown limpo, organizado e profissional.
+* Priorizar clareza para avaliadores que irão rodar o projeto localmente.
+
+Ao final:
+
+1. Informe quais arquivos foram alterados.
+2. Informe os principais comandos documentados no README.
+3. Sugira uma mensagem de commit curta seguindo Conventional Commits.
+````
+
+- **Resultado gerado:** Criação de um README completo em português com descrição do projeto, papel funcional da IA, funcionalidades, arquitetura, fluxo, instalação, Ollama, execução local, testes, estrutura de pastas, escolhas técnicas, limitações, escopo futuro, documentação complementar e evidências de uso de IA; atualização deste registro em `prompts.md`.
+
