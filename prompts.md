@@ -576,3 +576,88 @@ Ao final:
 
 - **Resultado gerado:** Configuração do Vitest com jsdom e React Testing Library, adição dos scripts `test` e `test:watch`, criação de 7 testes automatizados cobrindo formulário, validação de ideia vazia, estado de carregamento, chamada para `/api/analyze`, exibição da análise e erros da rota `/api/analyze`.
 
+### Prompt 006 - Refatoração de organização e manutenção
+
+- **Data:** 2026-05-29
+- **Ferramenta utilizada:** Codex CLI
+- **Etapa do desenvolvimento:** Refatoração
+- **Objetivo:** Melhorar organização e legibilidade do código sem alterar comportamento.
+- **Prompt utilizado:**
+
+````text
+Você é um assistente sênior de engenharia de software especializado em Next.js, TypeScript, refatoração, organização de código e boas práticas de manutenção.
+
+Contexto:
+Estou desenvolvendo um projeto avaliativo chamado IdeaCheck AI. A aplicação permite que o usuário informe uma ideia de negócio e receba uma análise estruturada gerada por IA local via Ollama.
+
+Antes de executar a tarefa, leia os arquivos:
+- docs/PRD.md
+- docs/ARQUITETURA.md
+- docs/FLUXOGRAMA.md
+- prompts.md
+- package.json
+- app/
+- components/
+- lib/
+- types/
+- tests/, se existir
+
+Use esses arquivos como fonte de verdade para entender o escopo e a estrutura atual do projeto.
+
+Tecnologias do projeto:
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Ollama como LLM local
+- Modelo sugerido: llama3.2:3b
+- Execução local, sem deploy obrigatório
+
+Tarefa atual:
+Refatorar o código da aplicação para melhorar organização, legibilidade, separação de responsabilidades e manutenibilidade, sem alterar o comportamento funcional existente.
+
+Objetivos da refatoração:
+1. Melhorar a organização dos componentes.
+2. Separar responsabilidades entre interface, lógica de chamada da API e tipos.
+3. Reduzir duplicação de código.
+4. Melhorar nomes de funções, tipos e variáveis quando necessário.
+5. Garantir que a integração com Ollama continue funcionando.
+6. Garantir que os testes existentes continuem passando.
+7. Atualizar `prompts.md` registrando este prompt como uma nova entrada.
+
+Regras obrigatórias:
+- Não alterar o escopo funcional da aplicação.
+- Não adicionar novas funcionalidades.
+- Não remover a integração real com Ollama.
+- Não criar resposta mockada no código de produção.
+- Não alterar o conteúdo de `docs/PRD.md`, `docs/ARQUITETURA.md` ou `docs/FLUXOGRAMA.md`, salvo correção mínima necessária.
+- Não modificar `README.md` nesta etapa.
+- Não criar login, banco de dados, histórico ou dashboard.
+- Manter textos da interface em português.
+- Manter o projeto simples e adequado a um MVP avaliativo.
+- Preservar ou melhorar a tipagem TypeScript.
+- Manter os testes automatizados funcionando.
+
+Durante a refatoração, avalie se faz sentido:
+- extrair funções auxiliares para `lib/`;
+- centralizar tipos em `types/`;
+- separar componentes menores em `components/`;
+- simplificar a rota `app/api/analyze/route.ts`;
+- melhorar tratamento de erros;
+- melhorar clareza dos testes, se necessário, sem reduzir cobertura.
+
+Após refatorar:
+1. Rode ou indique o comando para rodar os testes.
+2. Informe quais arquivos foram alterados.
+3. Explique resumidamente quais melhorias foram feitas.
+4. Atualize `prompts.md` com este prompt seguindo a estrutura existente:
+   - Data
+   - Ferramenta utilizada: Codex CLI
+   - Etapa do desenvolvimento: Refatoração
+   - Objetivo: Melhorar organização e legibilidade do código sem alterar comportamento
+   - Prompt utilizado
+   - Resultado gerado
+5. Sugira uma mensagem de commit curta seguindo Conventional Commits.
+````
+
+- **Resultado gerado:** Refatoração do formulário, rota e helpers para separar chamada da API, mensagens, validação, serviço de análise via Ollama e componentes menores de interface; preservação do comportamento existente com testes e build passando.
+

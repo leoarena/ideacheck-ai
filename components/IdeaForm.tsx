@@ -1,15 +1,14 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { getApiErrorMessage, isAnalyzeSuccessResponse } from "@/lib/api";
+import { requestIdeaAnalysis } from "@/lib/api";
+import { uiMessages } from "@/lib/messages";
+import { normalizeIdeaInput } from "@/lib/validation";
 import type { BusinessIdeaAnalysis } from "@/types/analyze";
+import type { RequestStatus } from "@/types/ui";
 import { AnalysisResult } from "./AnalysisResult";
-
-type RequestStatus = "idle" | "loading" | "success" | "error";
-
-const emptyIdeaMessage = "Descreva uma ideia de negócio antes de solicitar a análise.";
-const ollamaUnavailableMessage =
-  "Não foi possível conectar ao Ollama local. Verifique se ele está em execução e tente novamente.";
+import { FormStatusMessage } from "./FormStatusMessage";
+import { IdeaTextarea } from "./IdeaTextarea";
 
 export function IdeaForm() {
   const [idea, setIdea] = useState("");
@@ -22,91 +21,34 @@ export function IdeaForm() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const trimmedIdea = idea.trim();
+    const normalizedIdea = normalizeIdeaInput(idea);
     setAnalysis(null);
 
-    if (!trimmedIdea) {
+    if (!normalizedIdea) {
       setStatus("error");
-      setMessage(emptyIdeaMessage);
+      setMessage(uiMessages.emptyIdea);
       return;
     }
 
     setStatus("loading");
-    setMessage("Gerando análise com IA local via Ollama...");
+    setMessage(uiMessages.loadingAnalysis);
 
     try {
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ idea: trimmedIdea })
-      });
-
-      const payload: unknown = await response.json().catch(() => null);
-
-      if (!response.ok) {
-        setStatus("error");
-
-        if (response.status === 400) {
-          setMessage(getApiErrorMessage(payload) || emptyIdeaMessage);
-          return;
-        }
-
-        if (response.status === 503) {
-          setMessage(getApiErrorMessage(payload) || ollamaUnavailableMessage);
-          return;
-        }
-
-        setMessage(getApiErrorMessage(payload) || "Não foi possível gerar a análise agora.");
-        return;
-      }
-
-      if (!isAnalyzeSuccessResponse(payload)) {
-        setStatus("error");
-        setMessage("A resposta da API não está no formato esperado para exibição da análise.");
-        return;
-      }
-
-      setAnalysis(payload.analysis);
+      const generatedAnalysis = await requestIdeaAnalysis(normalizedIdea);
+      setAnalysis(generatedAnalysis);
       setStatus("success");
-      setMessage("Análise gerada com sucesso pelo modelo local.");
-    } catch {
+      setMessage(uiMessages.successAnalysis);
+    } catch (error) {
       setStatus("error");
-      setMessage("Não foi possível conectar à rota local de análise.");
+      setMessage(error instanceof Error ? error.message : uiMessages.routeConnectionError);
     }
   }
 
   return (
     <div className="space-y-5">
       <form onSubmit={handleSubmit} className="rounded-lg border border-line bg-panel p-5 shadow-soft sm:p-6">
-        <div className="space-y-2">
-          <label htmlFor="idea" className="text-sm font-semibold text-ink">
-            Ideia de negócio
-          </label>
-          <textarea
-            id="idea"
-            name="idea"
-            value={idea}
-            onChange={(event) => setIdea(event.target.value)}
-            placeholder="Exemplo: uma plataforma local para pequenos restaurantes preverem demanda e reduzirem desperdício."
-            rows={8}
-            disabled={isLoading}
-            className="min-h-48 w-full resize-y rounded-lg border border-line bg-white px-4 py-3 text-base leading-7 text-ink outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20 disabled:cursor-not-allowed disabled:bg-surface"
-          />
-        </div>
-
-        {message ? (
-          <p
-            className={`mt-4 rounded-lg border px-4 py-3 text-sm leading-6 ${
-              status === "error"
-                ? "border-amber-300 bg-amber-50 text-warning"
-                : "border-line bg-surface text-muted"
-            }`}
-          >
-            {message}
-          </p>
-        ) : null}
+        <IdeaTextarea value={idea} disabled={isLoading} onChange={setIdea} />
+        <FormStatusMessage status={status} message={message} />
 
         <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted">A análise será gerada localmente pelo modelo configurado no Ollama.</p>
