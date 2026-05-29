@@ -1,4 +1,4 @@
-import type { BusinessIdeaAnalysis } from "@/types/analyze";
+import type { BusinessIdeaAnalysis, BusinessIdeaAnalysisSectionKey } from "@/types/analyze";
 
 interface AnalysisResultProps {
   analysis: BusinessIdeaAnalysis | null;
@@ -7,13 +7,23 @@ interface AnalysisResultProps {
 
 const sections: Array<{
   title: string;
-  key: keyof BusinessIdeaAnalysis;
+  key: BusinessIdeaAnalysisSectionKey;
 }> = [
-  { title: "Problema que a ideia resolve", key: "problemResolved" },
+  { title: "Problema que resolve", key: "problemResolved" },
   { title: "Público-alvo", key: "targetAudience" },
   { title: "Concorrência básica", key: "basicCompetition" },
-  { title: "Pontos de atenção", key: "attentionPoints" }
+  { title: "Pontos de atenção", key: "attentionPoints" },
+  { title: "Próximos passos sugeridos", key: "nextSteps" },
+  { title: "Nota inicial de viabilidade", key: "viabilityScore" }
 ];
+
+function renderContent(content: string | undefined) {
+  if (!content) {
+    return "Esta seção não foi identificada na resposta da IA.";
+  }
+
+  return content;
+}
 
 export function AnalysisResult({ analysis, isLoading }: AnalysisResultProps) {
   return (
@@ -21,7 +31,7 @@ export function AnalysisResult({ analysis, isLoading }: AnalysisResultProps) {
       <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="text-lg font-semibold text-ink">Resultado da análise</h2>
-          <p className="text-sm text-muted">Área preparada para a resposta estruturada da IA.</p>
+          <p className="text-sm text-muted">Análise estruturada gerada localmente com IA via Ollama.</p>
         </div>
       </div>
 
@@ -39,9 +49,7 @@ export function AnalysisResult({ analysis, isLoading }: AnalysisResultProps) {
                   <div className="h-3 w-2/3 animate-pulse rounded bg-line" />
                 </div>
               ) : (
-                <p className="mt-3 text-sm leading-6 text-muted">
-                  {content || "Esta seção será preenchida quando a integração real com Ollama for implementada."}
-                </p>
+                <p className="mt-3 whitespace-pre-line text-sm leading-6 text-muted">{renderContent(content)}</p>
               )}
             </article>
           );

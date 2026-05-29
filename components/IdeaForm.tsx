@@ -8,8 +8,8 @@ import { AnalysisResult } from "./AnalysisResult";
 type RequestStatus = "idle" | "loading" | "success" | "error";
 
 const emptyIdeaMessage = "Descreva uma ideia de negócio antes de solicitar a análise.";
-const pendingIntegrationMessage =
-  "A integração com IA via Ollama ainda será conectada na próxima etapa. Nenhuma análise simulada foi gerada.";
+const ollamaUnavailableMessage =
+  "Não foi possível conectar ao Ollama local. Verifique se ele está em execução e tente novamente.";
 
 export function IdeaForm() {
   const [idea, setIdea] = useState("");
@@ -32,7 +32,7 @@ export function IdeaForm() {
     }
 
     setStatus("loading");
-    setMessage("Enviando a ideia para a rota local de análise...");
+    setMessage("Gerando análise com IA local via Ollama...");
 
     try {
       const response = await fetch("/api/analyze", {
@@ -53,12 +53,12 @@ export function IdeaForm() {
           return;
         }
 
-        if (response.status === 501) {
-          setMessage(getApiErrorMessage(payload) || pendingIntegrationMessage);
+        if (response.status === 503) {
+          setMessage(getApiErrorMessage(payload) || ollamaUnavailableMessage);
           return;
         }
 
-        setMessage(getApiErrorMessage(payload) || "Não foi possível processar a solicitação.");
+        setMessage(getApiErrorMessage(payload) || "Não foi possível gerar a análise agora.");
         return;
       }
 
@@ -70,7 +70,7 @@ export function IdeaForm() {
 
       setAnalysis(payload.analysis);
       setStatus("success");
-      setMessage("Análise recebida com sucesso.");
+      setMessage("Análise gerada com sucesso pelo modelo local.");
     } catch {
       setStatus("error");
       setMessage("Não foi possível conectar à rota local de análise.");
@@ -109,7 +109,7 @@ export function IdeaForm() {
         ) : null}
 
         <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted">A chamada real ao Ollama será conectada em uma etapa posterior.</p>
+          <p className="text-sm text-muted">A análise será gerada localmente pelo modelo configurado no Ollama.</p>
           <button
             type="submit"
             disabled={isLoading}

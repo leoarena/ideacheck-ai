@@ -12,14 +12,13 @@ export default function Home() {
                 Avaliação inicial de ideias de negócio com apoio de IA local.
               </h1>
               <p className="max-w-2xl text-base leading-7 text-muted">
-                Informe uma ideia e prepare a solicitação para uma análise estruturada com problema resolvido,
-                público-alvo, concorrência básica e pontos de atenção. A integração real com Ollama será conectada
-                na próxima etapa.
+                Informe uma ideia para receber uma análise estruturada com problema resolvido, público-alvo,
+                concorrência básica, pontos de atenção, próximos passos e nota inicial de viabilidade.
               </p>
             </div>
             <div className="rounded-lg border border-line bg-panel p-4 text-sm leading-6 text-muted shadow-soft">
-              <strong className="font-semibold text-ink">Planejamento do MVP:</strong> execução local com Next.js,
-              TypeScript, Tailwind CSS e futura chamada ao modelo <code>llama3.2:3b</code> via Ollama.
+              <strong className="font-semibold text-ink">MVP local:</strong> execução com Next.js, TypeScript,
+              Tailwind CSS e chamada ao modelo <code>llama3.2:3b</code> via Ollama.
             </div>
           </aside>
 

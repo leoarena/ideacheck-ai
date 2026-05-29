@@ -341,3 +341,133 @@ Ao final:
 
 - **Resultado gerado:** Criação da estrutura inicial Next.js com TypeScript e Tailwind CSS, página inicial com formulário, componentes reutilizáveis, tipos compartilhados, utilitários de API e rota `/api/analyze` preparada para futura integração com Ollama, retornando `400` para ideia vazia e `501` para integração ainda não implementada.
 
+### Prompt 004 - Integração real com IA via Ollama
+
+- **Data:** 2026-05-28
+- **Ferramenta utilizada:** Codex CLI
+- **Etapa do desenvolvimento:** Integração real com IA
+- **Objetivo:** Implementar a chamada real ao Ollama na rota `/api/analyze`, sem usar resposta mockada.
+- **Prompt utilizado:**
+
+````text
+Você é um assistente sênior de engenharia de software especializado em Next.js, TypeScript, integração com LLMs locais e boas práticas de arquitetura.
+
+Contexto:
+Estou desenvolvendo um projeto avaliativo chamado IdeaCheck AI. A aplicação permite que o usuário informe uma ideia de negócio e receba uma análise estruturada gerada por IA.
+
+Antes de executar a tarefa, leia os arquivos:
+
+* docs/PRD.md
+* docs/ARQUITETURA.md
+* docs/FLUXOGRAMA.md
+* prompts.md
+
+Use esses arquivos como fonte de verdade para entender o escopo do projeto.
+
+Tecnologias do projeto:
+
+* Next.js
+* TypeScript
+* Tailwind CSS
+* Ollama como LLM local
+* Modelo sugerido: llama3.2:3b
+* Execução local, sem deploy obrigatório
+
+Tarefa atual:
+Implementar a integração real com IA local via Ollama na rota `/api/analyze`.
+
+A aplicação deve enviar a ideia de negócio informada pelo usuário para o Ollama e retornar uma análise estruturada contendo:
+
+* problema que a ideia resolve;
+* público-alvo;
+* concorrência básica;
+* pontos de atenção.
+
+Também pode incluir, se fizer sentido:
+
+* papel da IA na solução;
+* próximos passos sugeridos;
+* nota inicial de viabilidade.
+
+Requisitos da implementação:
+
+1. Atualizar `app/api/analyze/route.ts` para chamar o Ollama em:
+   `http://localhost:11434/api/generate`
+
+2. Usar o modelo:
+   `llama3.2:3b`
+
+3. Permitir configuração por variável de ambiente:
+   `OLLAMA_MODEL=llama3.2:3b`
+
+4. Validar a entrada:
+
+   * se `idea` estiver ausente ou vazia, retornar erro 400;
+   * se o Ollama estiver indisponível, retornar erro 503 com mensagem clara;
+   * se houver erro inesperado, retornar erro 500.
+
+5. Montar um prompt claro para o LLM, instruindo-o a responder em português e em formato estruturado.
+
+6. Não usar resposta mockada.
+
+7. Atualizar o frontend para:
+
+   * enviar a ideia para `/api/analyze`;
+   * exibir estado de carregamento;
+   * exibir a análise retornada;
+   * exibir mensagens de erro compreensíveis quando a API falhar.
+
+8. Criar ou atualizar tipos TypeScript em `types/`, se necessário.
+
+9. Criar funções auxiliares em `lib/`, se isso melhorar a organização do código.
+
+10. Atualizar `prompts.md` registrando este prompt como uma nova entrada.
+
+O prompt enviado ao Ollama deve orientar o modelo a retornar a análise com esta estrutura:
+
+```text
+Você é um analista de negócios especializado em validação inicial de ideias.
+
+Analise a ideia de negócio abaixo e retorne uma resposta objetiva, em português, organizada nas seguintes seções:
+
+1. Problema que resolve
+2. Público-alvo
+3. Concorrência básica
+4. Pontos de atenção
+5. Próximos passos sugeridos
+6. Nota inicial de viabilidade de 0 a 10
+
+Ideia de negócio:
+[IDEIA_DO_USUARIO]
+```
+
+No arquivo `prompts.md`, registre este prompt seguindo a estrutura existente:
+
+* Data
+* Ferramenta utilizada: Codex CLI
+* Etapa do desenvolvimento: Integração real com IA
+* Objetivo: Implementar a chamada real ao Ollama
+* Prompt utilizado
+* Resultado gerado
+
+Restrições:
+
+* Não implementar testes automatizados nesta etapa
+* Não modificar `README.md` nesta etapa
+* Não alterar `docs/PRD.md`, `docs/ARQUITETURA.md` ou `docs/FLUXOGRAMA.md`, salvo correção mínima necessária
+* Não criar login, banco de dados, histórico ou dashboard
+* Não usar resposta mockada
+* Não usar OpenAI API, Gemini API ou outra API externa
+* Manter textos da interface em português
+* Manter o código simples, legível e fácil de testar posteriormente
+* Não expor detalhes técnicos desnecessários para o usuário final
+
+Ao final:
+
+1. Informe quais arquivos foram criados ou alterados
+2. Informe como testar manualmente a integração com Ollama
+3. Sugira uma mensagem de commit curta seguindo Conventional Commits
+````
+
+- **Resultado gerado:** Implementação da chamada real ao Ollama em `/api/analyze`, criação de funções auxiliares para prompt, cliente Ollama e parsing da análise, ampliação dos tipos TypeScript e atualização do frontend para exibir análise real ou mensagens de erro compreensíveis.
+
