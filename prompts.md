@@ -799,3 +799,105 @@ Ao final:
 
 - **Resultado gerado:** Criação de um README completo em português com descrição do projeto, papel funcional da IA, funcionalidades, arquitetura, fluxo, instalação, Ollama, execução local, testes, estrutura de pastas, escolhas técnicas, limitações, escopo futuro, documentação complementar e evidências de uso de IA; atualização deste registro em `prompts.md`.
 
+### Prompt 008 - Template de Pull Request
+
+- **Data:** 2026-05-29
+- **Ferramenta utilizada:** Codex CLI
+- **Etapa do desenvolvimento:** Template de Pull Request
+- **Objetivo:** Criar um template completo de Pull Request para evidenciar critérios de entrega, testes, documentação e uso funcional de IA.
+- **Prompt utilizado:**
+
+````text
+Você é um assistente sênior de engenharia de software especializado em GitHub, documentação técnica, revisão de código e boas práticas de Pull Requests.
+
+Contexto:
+Estou desenvolvendo um projeto avaliativo chamado IdeaCheck AI. A aplicação permite que o usuário informe uma ideia de negócio e receba uma análise estruturada gerada por IA local via Ollama.
+
+Antes de executar a tarefa, leia os arquivos:
+
+* README.md
+* docs/PRD.md
+* docs/ARQUITETURA.md
+* docs/FLUXOGRAMA.md
+* prompts.md
+* package.json
+
+Use esses arquivos como fonte de verdade para entender os critérios avaliativos e o estado atual do projeto.
+
+Tarefa atual:
+Criar um template completo de Pull Request para o repositório.
+
+Arquivo a criar:
+
+* `.github/pull_request_template.md`
+
+O template deve conter seções para:
+
+1. Resumo do PR
+2. Alterações realizadas
+3. Como a IA atua no produto
+4. Documentação impactada
+5. Testes realizados
+6. Como testar localmente
+7. Evidências de uso de IA
+8. Checklist avaliativo
+9. Limitações conhecidas
+10. Observações adicionais
+
+O checklist avaliativo deve incluir:
+
+* README.md completo
+* docs/PRD.md versionado
+* Viabilidade documentada no PRD ou em documento equivalente
+* Fluxograma versionado no repositório
+* prompts.md com evidências dos prompts utilizados
+* IA com papel funcional no produto
+* Integração real com LLM local via Ollama
+* Código-fonte versionado
+* Pelo menos 5 testes automatizados
+* Pull Request aberto com template completo
+* Aplicação executável localmente
+* Sem dependência de deploy obrigatório
+
+Na seção “Como testar localmente”, inclua comandos como:
+
+```bash
+npm install
+ollama serve
+ollama pull llama3.2:3b
+npm run dev
+npm test
+```
+
+Se os scripts reais do `package.json` forem diferentes, use os scripts reais existentes.
+
+Atualize também o arquivo `prompts.md`, registrando este prompt como uma nova entrada seguindo a estrutura existente:
+
+* Data
+* Ferramenta utilizada: Codex CLI
+* Etapa do desenvolvimento: Template de Pull Request
+* Objetivo: Criar um template completo de Pull Request para evidenciar critérios de entrega, testes, documentação e uso funcional de IA
+* Prompt utilizado
+* Resultado gerado
+
+Restrições:
+
+* Não alterar código da aplicação.
+* Não alterar testes.
+* Não alterar README.md nesta etapa.
+* Não alterar arquivos em `docs/`, salvo se for absolutamente necessário corrigir inconsistência mínima.
+* Não criar `docs/PULL_REQUEST.md`.
+* Criar apenas um template reutilizável, não uma descrição de PR específica.
+* Manter o conteúdo em português.
+* Usar Markdown limpo e profissional.
+* Não inventar funcionalidades que não existem no projeto.
+
+Ao final:
+
+1. Informe quais arquivos foram criados ou alterados.
+2. Explique rapidamente como o template será usado ao abrir um PR no GitHub.
+3. Sugira uma mensagem de commit curta seguindo Conventional Commits.
+````
+
+- **Resultado gerado:** Criação de `.github/pull_request_template.md` com seções reutilizáveis para resumo, alterações, papel funcional da IA, documentação, testes, execução local, evidências de IA, checklist avaliativo, limitações e observações; atualização deste registro em `prompts.md`.
+
