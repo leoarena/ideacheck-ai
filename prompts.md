@@ -118,3 +118,114 @@ Restrições:
 ```
 
 - **Resultado gerado:** Criação do PRD inicial em `docs/PRD.md`, com requisitos, viabilidade, escopo, fluxo, riscos e integração planejada com Ollama; criação da estrutura padronizada de registro de prompts em `prompts.md`.
+
+### Prompt 002 - Arquitetura e fluxograma técnico
+
+- **Data:** 2026-05-28
+- **Ferramenta utilizada:** Codex CLI
+- **Etapa do desenvolvimento:** Arquitetura e fluxograma
+- **Objetivo:** Criar a documentação técnica de arquitetura e funcionamento do IdeaCheck AI, incluindo diagramas Mermaid e registro do prompt utilizado.
+- **Prompt utilizado:**
+
+```text
+Você é um assistente sênior de engenharia de software, arquitetura de sistemas e documentação técnica.
+
+Contexto:
+Estou desenvolvendo um projeto avaliativo chamado IdeaCheck AI. A aplicação permite que o usuário informe uma ideia de negócio e receba uma análise estruturada gerada por IA.
+
+Antes de executar a tarefa, leia o arquivo `docs/PRD.md` e use-o como fonte principal de contexto do projeto.
+
+Tecnologias planejadas:
+
+* Next.js
+* TypeScript
+* Tailwind CSS
+* Ollama como LLM local
+* Modelo sugerido: llama3.2:3b
+* Execução local, sem deploy obrigatório
+
+Critérios obrigatórios relevantes nesta etapa:
+
+* Fluxograma de funcionamento versionado no repositório
+* Arquitetura documentada
+* Diagrama UML gerado com apoio de IA
+* IA com papel funcional no produto
+* Registro do prompt utilizado no `prompts.md`
+
+Tarefa atual:
+Criar a documentação de arquitetura e funcionamento do projeto.
+
+Arquivos a criar ou atualizar:
+
+1. Criar `docs/ARQUITETURA.md`
+2. Criar `docs/FLUXOGRAMA.md`
+3. Atualizar `prompts.md` registrando este prompt como uma nova entrada
+
+No arquivo `docs/ARQUITETURA.md`, documente:
+
+1. Visão geral da arquitetura
+2. Principais componentes do sistema
+3. Responsabilidade de cada componente
+4. Fluxo de comunicação entre frontend, API route local e Ollama
+5. Papel funcional da IA no produto
+6. Justificativa técnica pelo uso do Ollama
+7. Benefícios da execução local
+8. Limitações técnicas conhecidas
+9. Possíveis melhorias futuras
+
+Inclua também um diagrama UML simples em Mermaid, preferencialmente um diagrama de casos de uso, contendo:
+
+* Usuário
+* Sistema IdeaCheck AI
+* LLM local via Ollama
+* Informar ideia de negócio
+* Solicitar análise
+* Gerar análise com IA
+* Visualizar resultado estruturado
+
+No arquivo `docs/FLUXOGRAMA.md`, documente:
+
+1. Descrição textual do fluxo principal
+2. Fluxograma em Mermaid mostrando o funcionamento da aplicação
+3. Fluxo de erro quando o Ollama não estiver disponível
+4. Fluxo de validação quando o usuário tenta enviar uma ideia vazia
+
+O fluxo principal deve representar:
+
+1. Usuário acessa a aplicação
+2. Usuário digita uma ideia de negócio
+3. Frontend valida a entrada
+4. Frontend envia a ideia para a rota `/api/analyze`
+5. A rota local monta o prompt para o LLM
+6. A rota local envia a requisição para `http://localhost:11434/api/generate`
+7. Ollama executa o modelo `llama3.2:3b`
+8. O LLM retorna uma análise estruturada
+9. A API route retorna a resposta ao frontend
+10. O frontend exibe a análise para o usuário
+
+No arquivo `prompts.md`, registre este prompt seguindo a estrutura existente:
+
+* Data
+* Ferramenta utilizada: Codex CLI
+* Etapa do desenvolvimento: Arquitetura e fluxograma
+* Objetivo
+* Prompt utilizado
+* Resultado gerado
+
+Restrições:
+
+* Não implementar código da aplicação ainda
+* Não instalar dependências
+* Não modificar `README.md` neste momento
+* Não alterar o PRD, exceto se for necessário corrigir alguma inconsistência evidente
+* Manter todos os textos em português
+* Usar Markdown limpo e profissional
+* Usar Mermaid para os diagramas
+* Não afirmar que a aplicação já está implementada
+* Escrever a documentação como planejamento técnico para a próxima etapa de implementação
+
+Ao final, sugira uma mensagem de commit curta seguindo Conventional Commits.
+```
+
+- **Resultado gerado:** Criação de `docs/ARQUITETURA.md` com visão arquitetural, componentes, responsabilidades, fluxo de comunicação e diagrama UML em Mermaid; criação de `docs/FLUXOGRAMA.md` com fluxo principal, erro de Ollama indisponível e validação de ideia vazia; atualização deste registro em `prompts.md`.
+
