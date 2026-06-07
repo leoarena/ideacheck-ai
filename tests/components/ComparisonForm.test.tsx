@@ -116,7 +116,13 @@ describe("ComparisonForm", () => {
     await user.click(screen.getByRole("button", { name: /comparar ideias/i }));
 
     expect(await screen.findByText(sampleComparison.comparison.comparativeSummary)).toBeInTheDocument();
+    expect(screen.getAllByText("Ideia A")).toHaveLength(2);
     expect(screen.getByText(sampleComparison.comparison.recommendationJustification)).toBeInTheDocument();
+    expect(screen.getByText(sampleComparison.comparison.ideaAAdvantages)).toBeInTheDocument();
+    expect(screen.getByText(sampleComparison.comparison.ideaBAdvantages)).toBeInTheDocument();
+    expect(screen.getByText(sampleComparison.comparison.ideaARisks)).toBeInTheDocument();
+    expect(screen.getByText(sampleComparison.comparison.ideaBRisks)).toBeInTheDocument();
+    expect(screen.getByText(sampleComparison.comparison.nextSteps)).toBeInTheDocument();
     expect(screen.getByText(sampleComparison.comparison.comparativeScores)).toBeInTheDocument();
   });
 
