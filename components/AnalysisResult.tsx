@@ -31,7 +31,7 @@ export function AnalysisResult({ analysis, isLoading }: AnalysisResultProps) {
       <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="text-lg font-semibold text-ink">Resultado da análise</h2>
-          <p className="text-sm text-muted">Análise estruturada gerada localmente com IA via Ollama.</p>
+          <p className="text-sm text-muted">Análise estruturada gerada com apoio de IA.</p>
         </div>
       </div>
 

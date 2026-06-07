@@ -63,7 +63,7 @@ describe("IdeaForm", () => {
     await user.type(screen.getByLabelText(/ideia de negócio/i), "Marketplace para produtores locais");
     await user.click(screen.getByRole("button", { name: /solicitar análise/i }));
 
-    expect(screen.getByText(/gerando análise com ia local via ollama/i)).toBeInTheDocument();
+    expect(screen.getByText(/gerando análise com apoio de ia/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /solicitando análise/i })).toBeDisabled();
   });
 

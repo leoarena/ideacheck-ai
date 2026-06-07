@@ -51,7 +51,7 @@ export function IdeaForm() {
         <FormStatusMessage status={status} message={message} />
 
         <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted">A análise será gerada localmente pelo modelo configurado no Ollama.</p>
+          <p className="text-sm text-muted">A análise será gerada com apoio de IA.</p>
           <button
             type="submit"
             disabled={isLoading}

@@ -74,7 +74,7 @@ describe("POST /api/compare", () => {
     const body = await response.json();
 
     expect(response.status).toBe(503);
-    expect(body.error).toMatch(/não foi possível conectar ao ollama local/i);
+    expect(body.error).toMatch(/não foi possível gerar a resposta agora/i);
     expect(generateTextWithOllamaMock).toHaveBeenCalledTimes(1);
   });
 

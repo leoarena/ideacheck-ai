@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "IdeaCheck AI",
-  description: "Aplicação local para análise inicial de ideias de negócio com IA."
+  description: "Aplicação para análise inicial de ideias de negócio com IA."
 };
 
 interface RootLayoutProps {
