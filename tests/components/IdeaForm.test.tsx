@@ -27,6 +27,15 @@ function mockFetchWithResponse(payload: unknown, init?: ResponseInit) {
   );
 }
 
+function mockClipboard(writeText = vi.fn().mockResolvedValue(undefined)) {
+  Object.defineProperty(navigator, "clipboard", {
+    value: { writeText },
+    configurable: true
+  });
+
+  return writeText;
+}
+
 describe("IdeaForm", () => {
   beforeEach(() => {
     vi.stubGlobal("fetch", vi.fn());
@@ -43,6 +52,7 @@ describe("IdeaForm", () => {
     expect(screen.getByLabelText(/ideia de negócio/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /solicitar análise/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /resultado da análise/i })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /copiar resultado em markdown/i })).not.toBeInTheDocument();
   });
 
   it("impede o envio quando o campo de ideia está vazio", async () => {
@@ -63,8 +73,9 @@ describe("IdeaForm", () => {
     await user.type(screen.getByLabelText(/ideia de negócio/i), "Marketplace para produtores locais");
     await user.click(screen.getByRole("button", { name: /solicitar análise/i }));
 
-    expect(screen.getByText(/gerando análise com ia local via ollama/i)).toBeInTheDocument();
+    expect(screen.getByText(/gerando análise com apoio de ia/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /solicitando análise/i })).toBeDisabled();
+    expect(screen.queryByRole("button", { name: /copiar resultado em markdown/i })).not.toBeInTheDocument();
   });
 
   it("chama a rota /api/analyze com a ideia digitada", async () => {
@@ -100,5 +111,20 @@ describe("IdeaForm", () => {
     expect(await screen.findByText(sampleAnalysis.analysis.problemResolved)).toBeInTheDocument();
     expect(screen.getByText(sampleAnalysis.analysis.targetAudience)).toBeInTheDocument();
     expect(screen.getByText(sampleAnalysis.analysis.viabilityScore)).toBeInTheDocument();
+  });
+
+  it("copia a análise em Markdown e exibe feedback de sucesso", async () => {
+    const user = userEvent.setup();
+    const writeText = mockClipboard();
+    vi.stubGlobal("fetch", mockFetchWithResponse(sampleAnalysis));
+    render(<IdeaForm />);
+
+    await user.type(screen.getByLabelText(/ideia de negócio/i), "App para reduzir desperdício em restaurantes");
+    await user.click(screen.getByRole("button", { name: /solicitar análise/i }));
+    await user.click(await screen.findByRole("button", { name: /copiar resultado em markdown/i }));
+
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining("# Análise da ideia de negócio"));
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining("## Problema resolvido"));
+    expect(await screen.findByText(/resultado copiado em markdown/i)).toBeInTheDocument();
   });
 });
