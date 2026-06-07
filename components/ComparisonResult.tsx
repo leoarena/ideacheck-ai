@@ -1,17 +1,12 @@
 import { formatComparisonAsMarkdown } from "@/lib/result-markdown";
-import type { BusinessIdeaComparison, BusinessIdeaComparisonSectionKey, RecommendedIdea } from "@/types/compare";
+import { getRecommendedIdeaLabel } from "@/lib/recommended-idea-label";
+import type { BusinessIdeaComparison, BusinessIdeaComparisonSectionKey } from "@/types/compare";
 import { ResultCopyButton } from "./ResultCopyButton";
 
 interface ComparisonResultProps {
   comparison: BusinessIdeaComparison | null;
   isLoading: boolean;
 }
-
-const recommendedIdeaLabels: Record<RecommendedIdea, string> = {
-  ideaA: "Ideia A",
-  ideaB: "Ideia B",
-  tie: "Empate"
-};
 
 const sections: Array<{
   title: string;
@@ -55,7 +50,7 @@ export function ComparisonResult({ comparison, isLoading }: ComparisonResultProp
           <div className="mt-4 h-4 w-32 animate-pulse rounded bg-line" aria-label="Carregando recomendação" />
         ) : (
           <p className="mt-3 text-sm leading-6 text-muted">
-            {comparison ? recommendedIdeaLabels[comparison.recommendedIdea] : "A recomendação aparecerá após a comparação."}
+            {comparison ? getRecommendedIdeaLabel(comparison.recommendedIdea) : "A recomendação aparecerá após a comparação."}
           </p>
         )}
       </article>
