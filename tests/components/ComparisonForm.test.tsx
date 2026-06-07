@@ -31,6 +31,15 @@ function mockFetchWithResponse(payload: unknown, init?: ResponseInit) {
   );
 }
 
+function mockClipboard(writeText = vi.fn().mockResolvedValue(undefined)) {
+  Object.defineProperty(navigator, "clipboard", {
+    value: { writeText },
+    configurable: true
+  });
+
+  return writeText;
+}
+
 describe("ComparisonForm", () => {
   beforeEach(() => {
     vi.stubGlobal("fetch", vi.fn());
@@ -48,6 +57,7 @@ describe("ComparisonForm", () => {
     expect(screen.getByLabelText(/ideia b/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /comparar ideias/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /resultado da comparação/i })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /copiar resultado em markdown/i })).not.toBeInTheDocument();
   });
 
   it("impede o envio quando uma das ideias está vazia", async () => {
@@ -108,5 +118,35 @@ describe("ComparisonForm", () => {
     expect(await screen.findByText(sampleComparison.comparison.comparativeSummary)).toBeInTheDocument();
     expect(screen.getByText(sampleComparison.comparison.recommendationJustification)).toBeInTheDocument();
     expect(screen.getByText(sampleComparison.comparison.comparativeScores)).toBeInTheDocument();
+  });
+
+  it("copia a comparação em Markdown e exibe feedback de sucesso", async () => {
+    const user = userEvent.setup();
+    const writeText = mockClipboard();
+    vi.stubGlobal("fetch", mockFetchWithResponse(sampleComparison));
+    render(<ComparisonForm />);
+
+    await user.type(screen.getByLabelText(/ideia a/i), "App para restaurantes");
+    await user.type(screen.getByLabelText(/ideia b/i), "Marketplace para produtores locais");
+    await user.click(screen.getByRole("button", { name: /comparar ideias/i }));
+    await user.click(await screen.findByRole("button", { name: /copiar resultado em markdown/i }));
+
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining("# Comparação de ideias de negócio"));
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining("## Ideia recomendada"));
+    expect(await screen.findByText(/resultado copiado em markdown/i)).toBeInTheDocument();
+  });
+
+  it("exibe feedback quando não é possível copiar a comparação", async () => {
+    const user = userEvent.setup();
+    mockClipboard(vi.fn().mockRejectedValue(new Error("Falha ao copiar")));
+    vi.stubGlobal("fetch", mockFetchWithResponse(sampleComparison));
+    render(<ComparisonForm />);
+
+    await user.type(screen.getByLabelText(/ideia a/i), "App para restaurantes");
+    await user.type(screen.getByLabelText(/ideia b/i), "Marketplace para produtores locais");
+    await user.click(screen.getByRole("button", { name: /comparar ideias/i }));
+    await user.click(await screen.findByRole("button", { name: /copiar resultado em markdown/i }));
+
+    expect(await screen.findByText(/não foi possível copiar o resultado/i)).toBeInTheDocument();
   });
 });

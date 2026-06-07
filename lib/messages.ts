@@ -9,7 +9,9 @@ export const uiMessages = {
   routeConnectionError: "Não foi possível gerar a análise agora.",
   comparisonRouteConnectionError: "Não foi possível gerar a comparação agora.",
   genericAnalysisError: "Não foi possível gerar a análise agora.",
-  genericComparisonError: "Não foi possível gerar a comparação agora."
+  genericComparisonError: "Não foi possível gerar a comparação agora.",
+  copyMarkdownSuccess: "Resultado copiado em Markdown.",
+  copyMarkdownError: "Não foi possível copiar o resultado."
 } as const;
 
 export const apiMessages = {

@@ -1,4 +1,6 @@
+import { formatAnalysisAsMarkdown } from "@/lib/result-markdown";
 import type { BusinessIdeaAnalysis, BusinessIdeaAnalysisSectionKey } from "@/types/analyze";
+import { ResultCopyButton } from "./ResultCopyButton";
 
 interface AnalysisResultProps {
   analysis: BusinessIdeaAnalysis | null;
@@ -26,13 +28,16 @@ function renderContent(content: string | undefined) {
 }
 
 export function AnalysisResult({ analysis, isLoading }: AnalysisResultProps) {
+  const markdown = analysis ? formatAnalysisAsMarkdown(analysis) : null;
+
   return (
     <section aria-live="polite" className="rounded-lg border border-line bg-panel p-5 shadow-soft">
-      <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="text-lg font-semibold text-ink">Resultado da análise</h2>
           <p className="text-sm text-muted">Análise estruturada gerada com apoio de IA.</p>
         </div>
+        {markdown && !isLoading ? <ResultCopyButton markdown={markdown} /> : null}
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">

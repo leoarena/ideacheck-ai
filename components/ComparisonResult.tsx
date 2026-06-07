@@ -1,4 +1,6 @@
+import { formatComparisonAsMarkdown } from "@/lib/result-markdown";
 import type { BusinessIdeaComparison, BusinessIdeaComparisonSectionKey, RecommendedIdea } from "@/types/compare";
+import { ResultCopyButton } from "./ResultCopyButton";
 
 interface ComparisonResultProps {
   comparison: BusinessIdeaComparison | null;
@@ -35,13 +37,16 @@ function renderContent(content: string | undefined) {
 }
 
 export function ComparisonResult({ comparison, isLoading }: ComparisonResultProps) {
+  const markdown = comparison ? formatComparisonAsMarkdown(comparison) : null;
+
   return (
     <section aria-live="polite" className="rounded-lg border border-line bg-panel p-5 shadow-soft">
-      <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="text-lg font-semibold text-ink">Resultado da comparação</h2>
           <p className="text-sm text-muted">Comparação estruturada gerada com apoio de IA.</p>
         </div>
+        {markdown && !isLoading ? <ResultCopyButton markdown={markdown} /> : null}
       </div>
 
       <article className="mb-3 rounded-lg border border-line bg-surface p-4">
