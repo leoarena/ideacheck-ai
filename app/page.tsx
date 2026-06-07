@@ -1,3 +1,4 @@
+import { ComparisonForm } from "@/components/ComparisonForm";
 import { IdeaForm } from "@/components/IdeaForm";
 
 export default function Home() {
@@ -12,8 +13,8 @@ export default function Home() {
                 Avaliação inicial de ideias de negócio com apoio de IA local.
               </h1>
               <p className="max-w-2xl text-base leading-7 text-muted">
-                Informe uma ideia para receber uma análise estruturada com problema resolvido, público-alvo,
-                concorrência básica, pontos de atenção, próximos passos e nota inicial de viabilidade.
+                Informe uma ideia para receber uma análise estruturada ou compare duas alternativas para obter uma
+                recomendação justificada com vantagens, riscos, público-alvo e próximos passos.
               </p>
             </div>
             <div className="rounded-lg border border-line bg-panel p-4 text-sm leading-6 text-muted shadow-soft">
@@ -22,7 +23,10 @@ export default function Home() {
             </div>
           </aside>
 
-          <IdeaForm />
+          <div className="space-y-6">
+            <IdeaForm />
+            <ComparisonForm />
+          </div>
         </div>
       </section>
     </main>
