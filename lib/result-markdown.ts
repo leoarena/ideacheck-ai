@@ -1,11 +1,6 @@
+import { getRecommendedIdeaLabel } from "@/lib/recommended-idea-label";
 import type { BusinessIdeaAnalysis } from "@/types/analyze";
-import type { BusinessIdeaComparison, RecommendedIdea } from "@/types/compare";
-
-const recommendedIdeaLabels: Record<RecommendedIdea, string> = {
-  ideaA: "Ideia A",
-  ideaB: "Ideia B",
-  tie: "Empate"
-};
+import type { BusinessIdeaComparison } from "@/types/compare";
 
 type MarkdownSection = {
   title: string;
@@ -91,7 +86,7 @@ export function formatAnalysisAsMarkdown(analysis: BusinessIdeaAnalysis): string
 
 export function formatComparisonAsMarkdown(comparison: BusinessIdeaComparison): string {
   return joinMarkdown("Comparação de ideias de negócio", [
-    { title: "Ideia recomendada", content: recommendedIdeaLabels[comparison.recommendedIdea] },
+    { title: "Ideia recomendada", content: getRecommendedIdeaLabel(comparison.recommendedIdea) },
     { title: "Resumo comparativo", content: comparison.comparativeSummary },
     { title: "Justificativa", content: comparison.recommendationJustification },
     { title: "Vantagens da ideia A", content: comparison.ideaAAdvantages, list: true },
