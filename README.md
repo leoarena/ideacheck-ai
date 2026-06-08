@@ -167,6 +167,22 @@ Execute o lint com:
 npm run lint
 ```
 
+## Integração contínua
+
+O projeto possui um workflow do GitHub Actions executado automaticamente em `push` e `pull_request`.
+
+O pipeline valida:
+
+- lint;
+- testes automatizados;
+- build da aplicação.
+
+Arquivo do workflow:
+
+```text
+.github/workflows/ci.yml
+```
+
 ## Como Verificar Cobertura de Testes
 
 No estado atual do projeto, não há script de cobertura configurado no `package.json`.
