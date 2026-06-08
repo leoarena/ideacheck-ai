@@ -1,137 +1,114 @@
 # IdeaCheck AI
 
-Aplicação web local para análise inicial de ideias de negócio com apoio de IA via Ollama.
+## Visão geral
+O IdeaCheck AI é uma aplicação web local para análise inicial de ideias de negócio com apoio de IA via Ollama.
 
-## Descrição Curta
+O produto ajuda pessoas em fase inicial de criação de negócios a organizar uma ideia, entender o problema resolvido, identificar público-alvo, levantar riscos e comparar alternativas antes de avançar para validações reais de mercado.
 
-O IdeaCheck AI permite que o usuário descreva uma ideia de negócio e receba uma análise estruturada gerada por um LLM local. A aplicação roda localmente com Next.js, TypeScript, Tailwind CSS e Ollama, sem necessidade de deploy obrigatório.
+## Funcionalidades
+- Análise individual de uma ideia de negócio.
+- Comparação entre duas ideias de negócio, com recomendação estruturada.
+- Cópia do resultado em Markdown para análise individual e comparação.
 
-## Problema Resolvido
+## Tecnologias
+Tecnologias confirmadas no repositório:
 
-Pessoas em fase inicial de criação de negócios costumam ter dificuldade para organizar rapidamente uma ideia, entender o problema que ela resolve, identificar público-alvo, mapear concorrência básica e levantar pontos de atenção.
+- Next.js 15.
+- React 19.
+- TypeScript.
+- Tailwind CSS.
+- Ollama.
+- Modelo padrão `llama3.2:3b`.
+- Vitest.
+- React Testing Library.
+- jsdom.
+- Testing Library user-event.
+- ESLint.
+- GitHub Actions.
 
-O IdeaCheck AI resolve esse problema como uma ferramenta de apoio exploratório: ele transforma uma descrição livre em uma análise estruturada, ajudando o usuário a refletir sobre riscos, próximos passos e viabilidade inicial.
+## Uso de IA no desenvolvimento
+| etapa | uso realizado | evidência em `docs/prompts/` |
+| --- | --- | --- |
+| Diagnóstico arquitetural | Inspeção da arquitetura, módulos reaproveitáveis, riscos e menor evolução funcional recomendada. | [`docs/prompts/01-diagnostico-arquitetura.md`](docs/prompts/01-diagnostico-arquitetura.md) |
+| Definição e refinamento de escopo | Escolha e revisão da evolução funcional, refinando a funcionalidade principal para comparação entre ideias. | [`docs/prompts/02-definicao-escopo.md`](docs/prompts/02-definicao-escopo.md) |
+| Documentação de arquitetura | Registro da arquitetura, responsabilidades, fluxos e diagramas Mermaid. | [`docs/prompts/03-documentacao-arquitetura.md`](docs/prompts/03-documentacao-arquitetura.md) |
+| Geração de código | Implementação inicial da comparação entre duas ideias. | [`docs/prompts/04-geracao-codigo-ciclo-1.md`](docs/prompts/04-geracao-codigo-ciclo-1.md) |
+| Refinamento de interface | Ajuste de textos visíveis para reduzir detalhes técnicos na experiência do usuário. | [`docs/prompts/05-refinamento-ciclo-2.md`](docs/prompts/05-refinamento-ciclo-2.md) |
+| Refinamento com Few-shot Prompting | Implementação da cópia do resultado em Markdown com exemplos orientadores. | [`docs/prompts/06-refinamento-ciclo-3.md`](docs/prompts/06-refinamento-ciclo-3.md) |
+| Refatoração | Remoção de duplicação no mapeamento de recomendação para rótulo exibido e copiado. | [`docs/prompts/07-refatoracao.md`](docs/prompts/07-refatoracao.md) |
+| Testes automatizados | Ampliação da cobertura para fluxos principais, entradas inválidas, casos limite, regressões e Markdown. | [`docs/prompts/08-testes.md`](docs/prompts/08-testes.md) |
+| Lint | Configuração de ESLint e documentação do comando de qualidade de código. | [`docs/prompts/09-lint.md`](docs/prompts/09-lint.md) |
+| Pipeline | Configuração de integração contínua com GitHub Actions. | [`docs/prompts/10-pipeline.md`](docs/prompts/10-pipeline.md) |
+| Documentação e análise crítica | Registro de intervenção humana sobre sugestão insuficiente da IA. | [`docs/prompts/11-analise-critica.md`](docs/prompts/11-analise-critica.md) |
+| README | Consolidação da documentação técnica e funcional do projeto. | [`docs/prompts/12-readme.md`](docs/prompts/12-readme.md) |
 
-## Como a IA Atua no Produto
+## Padrões de prompting aplicados
+**Role-based Prompting:** os prompts definem papéis especializados, como arquiteto de software, product engineer, desenvolvedor frontend, especialista em testes, qualidade de código, CI e documentação. Isso aparece nos registros em [`docs/prompts/01-diagnostico-arquitetura.md`](docs/prompts/01-diagnostico-arquitetura.md), [`docs/prompts/02-definicao-escopo.md`](docs/prompts/02-definicao-escopo.md), [`docs/prompts/04-geracao-codigo-ciclo-1.md`](docs/prompts/04-geracao-codigo-ciclo-1.md) e demais prompts.
 
-A IA não foi usada apenas para gerar código durante o desenvolvimento. Ela tem papel funcional dentro da aplicação.
+**Few-shot Prompting:** o ciclo 3 usou exemplos de análise individual, comparação de ideias e ausência de resultado para orientar a implementação da cópia em Markdown. A evidência está em [`docs/prompts/06-refinamento-ciclo-3.md`](docs/prompts/06-refinamento-ciclo-3.md).
 
-No fluxo principal:
+## Arquitetura
+A aplicação usa Next.js App Router para combinar a interface React e rotas locais de API no mesmo projeto. O navegador não chama o Ollama diretamente: a interface chama rotas internas, as rotas validam a entrada, os serviços montam prompts, a integração com Ollama gera o texto e os parsers transformam a resposta em estruturas TypeScript exibidas pela UI.
 
-1. O usuário informa uma ideia de negócio no formulário da aplicação.
-2. O frontend envia a ideia para a rota local `/api/analyze`.
-3. A rota monta um prompt estruturado em português.
-4. A aplicação envia esse prompt para um LLM local via Ollama em `http://localhost:11434/api/generate`.
-5. O modelo configurado retorna uma análise estruturada.
-6. O frontend exibe o resultado para o usuário.
+```mermaid
+flowchart TD
+    User[Usuário] --> Page[app/page.tsx]
+    Page --> IdeaForm[IdeaForm]
+    Page --> ComparisonForm[ComparisonForm]
 
-A análise retornada pela IA contém as seguintes seções implementadas:
+    IdeaForm --> AnalyzeClient[requestIdeaAnalysis]
+    AnalyzeClient --> AnalyzeRoute[POST /api/analyze]
+    AnalyzeRoute --> AnalyzeService[analysis-service]
+    AnalyzeService --> AnalyzePrompt[Prompt de análise]
+    AnalyzePrompt --> Ollama[Ollama local]
+    Ollama --> AnalyzeParser[Parser BusinessIdeaAnalysis]
+    AnalyzeParser --> AnalysisResult[AnalysisResult]
 
-- Problema que resolve.
-- Público-alvo.
-- Concorrência básica.
-- Pontos de atenção.
-- Próximos passos sugeridos.
-- Nota inicial de viabilidade.
+    ComparisonForm --> CompareClient[requestIdeaComparison]
+    CompareClient --> CompareRoute[POST /api/compare]
+    CompareRoute --> CompareService[comparison-service]
+    CompareService --> ComparePrompt[Prompt de comparação]
+    ComparePrompt --> Ollama
+    Ollama --> CompareParser[Parser BusinessIdeaComparison]
+    CompareParser --> ComparisonResult[ComparisonResult]
 
-A resposta deve ser interpretada como apoio inicial à reflexão, não como validação definitiva de mercado.
+    AnalysisResult --> CopyButton[Copiar resultado em Markdown]
+    ComparisonResult --> CopyButton
+```
 
-## Funcionalidades Implementadas
-
-- Página inicial com apresentação do IdeaCheck AI.
-- Formulário para inserir uma ideia de negócio.
-- Validação para impedir envio de ideia vazia.
-- Estado visual de carregamento durante a análise.
-- Rota local `/api/analyze` com validação de entrada.
-- Integração real com Ollama local.
-- Configuração do modelo via variável `OLLAMA_MODEL`.
-- Exibição da análise estruturada retornada pela IA.
-- Tratamento de erros para entrada inválida, Ollama indisponível e resposta inesperada.
-- Testes automatizados com Vitest e React Testing Library.
-- Registro versionado dos prompts usados no projeto.
-
-## Tecnologias Utilizadas
-
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-- Ollama
-- Modelo sugerido: `llama3.2:3b`
-- Vitest
-- React Testing Library
-- jsdom
-- Testing Library user-event
-
-## Arquitetura Geral da Aplicação
-
-A aplicação segue uma arquitetura simples para execução local:
-
-- `app/page.tsx`: página inicial da aplicação.
-- `components/`: componentes reutilizáveis de interface.
-- `app/api/analyze/route.ts`: rota local responsável por validar a entrada e acionar a análise.
-- `lib/`: funções auxiliares para chamada da API, integração com Ollama, parsing da resposta, mensagens, prompts e validações.
-- `types/`: tipos TypeScript compartilhados.
-- `tests/`: testes automatizados de componentes e rota.
-- `docs/`: documentação de produto, arquitetura e fluxo.
-
-A interface não chama o Ollama diretamente. O frontend envia a ideia para a API route local, e a rota de servidor centraliza a comunicação com o serviço local do Ollama.
-
-## Fluxo de Funcionamento
-
-1. O usuário acessa a aplicação localmente.
-2. O usuário digita uma ideia de negócio no formulário.
-3. O frontend valida se o campo foi preenchido.
-4. O frontend envia a ideia para `/api/analyze`.
-5. A API route valida novamente a entrada.
-6. A aplicação monta o prompt de análise.
-7. A rota chama o Ollama em `http://localhost:11434/api/generate`.
-8. O Ollama executa o modelo `llama3.2:3b` ou o modelo definido em `OLLAMA_MODEL`.
-9. O texto retornado pelo modelo é convertido em uma estrutura de análise.
-10. A API retorna a análise ao frontend.
-11. O frontend exibe as seções da análise para o usuário.
-
-## Como Instalar o Projeto
-
-Pré-requisitos:
-
+## Pré-requisitos
 - Node.js compatível com Next.js 15.
 - npm.
-- Ollama instalado na máquina.
+- Ollama instalado e em execução para usar os fluxos com IA.
+- Modelo `llama3.2:3b` disponível no Ollama, salvo uso de outro modelo via `OLLAMA_MODEL`.
 
-Instale as dependências do projeto:
+## Instalação
+Instale as dependências:
 
 ```bash
 npm install
 ```
 
-## Como Configurar e Rodar o Ollama
-
-Em um terminal separado, inicie o serviço local do Ollama:
+Inicie o Ollama em um terminal separado:
 
 ```bash
 ollama serve
 ```
 
-Se o Ollama já estiver rodando como serviço do sistema, esse comando pode não ser necessário.
-
-## Como Baixar o Modelo `llama3.2:3b`
-
-Baixe o modelo sugerido:
+Baixe o modelo padrão:
 
 ```bash
 ollama pull llama3.2:3b
 ```
 
-A aplicação usa `llama3.2:3b` como padrão. Também é possível definir o modelo por variável de ambiente:
+Opcionalmente, defina outro modelo compatível:
 
 ```bash
 OLLAMA_MODEL=llama3.2:3b npm run dev
 ```
 
-## Como Executar a Aplicação Localmente
-
-Com as dependências instaladas e o Ollama disponível, execute:
+## Execução
+Inicie a aplicação:
 
 ```bash
 npm run dev
@@ -143,151 +120,99 @@ Acesse no navegador:
 http://localhost:3000
 ```
 
-Se a porta `3000` estiver em uso, o Next.js poderá sugerir outra porta no terminal.
-
-## Como Rodar os Testes Automatizados
-
-Execute a suíte de testes:
-
-```bash
-npm test
-```
-
-Também existe um modo de observação para desenvolvimento:
-
-```bash
-npm run test:watch
-```
-
 ## Qualidade de código
-
-Execute o lint com:
+Execute as validações locais:
 
 ```bash
 npm run lint
+npm test
+npm run build
 ```
 
-## Integração contínua
-
-O projeto possui um workflow do GitHub Actions executado automaticamente em `push` e `pull_request`.
-
-O pipeline valida:
-
-- lint;
-- testes automatizados;
-- build da aplicação.
-
-Arquivo do workflow:
-
-```text
-.github/workflows/ci.yml
-```
-
-## Como Verificar Cobertura de Testes
-
-No estado atual do projeto, não há script de cobertura configurado no `package.json`.
-
-A cobertura pode ser adicionada futuramente com a configuração apropriada do Vitest, mas neste momento os scripts reais disponíveis são:
+Também existe modo de observação para testes:
 
 ```bash
-npm test
 npm run test:watch
 ```
 
-## Estrutura de Pastas do Projeto
+No estado atual, não há script de cobertura configurado no `package.json`.
 
-```text
-.
-├── app/
-│   ├── api/
-│   │   └── analyze/
-│   │       └── route.ts
-│   ├── globals.css
-│   ├── layout.tsx
-│   └── page.tsx
-├── components/
-│   ├── AnalysisResult.tsx
-│   ├── FormStatusMessage.tsx
-│   ├── IdeaForm.tsx
-│   └── IdeaTextarea.tsx
-├── docs/
-│   ├── ARQUITETURA.md
-│   ├── FLUXOGRAMA.md
-│   └── PRD.md
-├── lib/
-│   ├── analysis-service.ts
-│   ├── analysis.ts
-│   ├── api.ts
-│   ├── messages.ts
-│   ├── ollama.ts
-│   ├── prompts.ts
-│   └── validation.ts
-├── tests/
-│   ├── app/
-│   │   └── analyze-route.test.ts
-│   └── components/
-│       └── IdeaForm.test.tsx
-├── types/
-│   ├── analyze.ts
-│   ├── ollama.ts
-│   └── ui.ts
-├── prompts.md
-├── package.json
-├── tailwind.config.ts
-├── tsconfig.json
-├── vitest.config.ts
-└── vitest.setup.ts
-```
+## Integração contínua
+O workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) executa automaticamente em `push` e `pull_request`.
 
-## Escolhas Técnicas
+O pipeline:
+- faz checkout do repositório;
+- configura Node.js 22;
+- habilita cache npm;
+- instala dependências com `npm ci`;
+- executa `npm run lint`;
+- executa `npm test`;
+- executa `npm run build`.
 
-- **Next.js App Router:** usado para combinar frontend e rota local de servidor no mesmo projeto.
-- **TypeScript:** usado para melhorar clareza de contratos entre UI, API, Ollama e testes.
-- **Tailwind CSS:** usado para estilização simples, responsiva e adequada a um MVP.
-- **Ollama local:** usado para cumprir o requisito de IA local sem depender de APIs externas pagas.
-- **API route local:** usada para evitar que o frontend se comunique diretamente com o Ollama.
-- **Separação em `lib/`:** concentra prompt, chamada ao Ollama, parsing da análise, mensagens e validações.
-- **Testes com Vitest e React Testing Library:** cobrem comportamento da interface e cenários principais da rota.
+## Cenários de uso
 
-## Limitações Conhecidas
+### Cenário 1 — análise individual
+- Contexto: o usuário quer avaliar uma única ideia de negócio.
+- Exemplo de entrada: `Aplicativo para pequenos restaurantes preverem demanda e reduzirem desperdício.`
+- Ação: preencher o campo de ideia e solicitar a análise.
+- Resultado esperado: a aplicação retorna uma análise estruturada com problema resolvido, público-alvo, concorrência básica, pontos de atenção, próximos passos sugeridos e nota inicial de viabilidade.
 
-- O Ollama precisa estar instalado e em execução localmente.
-- O modelo `llama3.2:3b` precisa estar baixado ou o modelo alternativo deve ser configurado em `OLLAMA_MODEL`.
+### Cenário 2 — comparação de ideias
+- Contexto: o usuário tem duas alternativas e quer decidir qual investigar primeiro.
+- Exemplo de entrada A: `Aplicativo para pequenos restaurantes preverem demanda e reduzirem desperdício.`
+- Exemplo de entrada B: `Plataforma para conectar produtores locais a consumidores do bairro.`
+- Ação: preencher as duas ideias e solicitar a comparação.
+- Resultado esperado: a aplicação retorna resumo comparativo, ideia recomendada, justificativa, vantagens de cada ideia, riscos de cada ideia, diferenças de público-alvo, próximos passos e critérios comparativos.
+
+## Refatoração documentada
+A refatoração documentada removeu duplicação no mapeamento de `recommendedIdea` para os rótulos `Ideia A`, `Ideia B` e `Empate`. Antes, o mesmo mapeamento existia na UI e na conversão para Markdown. Depois, a regra passou a ficar centralizada em `lib/recommended-idea-label.ts`.
+
+Detalhes: [`docs/REFATORACAO.md`](docs/REFATORACAO.md).
+
+## Análise crítica de saída da IA
+Durante a definição de escopo, a IA sugeriu “Copiar a análise em Markdown” como principal evolução funcional. A revisão humana identificou que a ideia era útil, mas insuficiente como funcionalidade principal por não adicionar lógica de negócio relevante.
+
+O escopo foi refinado para priorizar a comparação entre duas ideias com recomendação estruturada. A cópia em Markdown foi preservada depois como melhoria secundária.
+
+Detalhes: [`docs/ANALISE-CRITICA.md`](docs/ANALISE-CRITICA.md).
+
+## Limitações
+- O uso funcional da IA depende do Ollama instalado e em execução localmente.
+- O modelo `llama3.2:3b` precisa estar disponível, salvo configuração alternativa via `OLLAMA_MODEL`.
 - O tempo de resposta depende do hardware local e do carregamento do modelo.
-- A análise gerada pode ser incompleta, genérica ou imprecisa.
+- A resposta da IA pode ser incompleta, genérica ou imprecisa.
 - A aplicação não realiza pesquisa real de mercado.
-- A concorrência indicada pela IA deve ser validada manualmente.
-- Não há autenticação, banco de dados, histórico ou dashboard nesta versão.
-- Não há deploy obrigatório configurado.
-- Não há script de cobertura de testes configurado no momento.
+- A análise e a recomendação não substituem validação com usuários, clientes ou especialistas.
+- Não há autenticação, banco de dados, histórico ou dashboard.
+- Não há deploy configurado.
+- Não há script de cobertura de testes configurado.
 
-## Escopo Futuro
-
-Possíveis evoluções:
-
+## Melhorias futuras
 - Histórico local de ideias analisadas.
-- Exportação da análise em Markdown ou PDF.
-- Comparação entre múltiplas ideias.
+- Download do resultado em arquivo.
+- Comparação entre mais de duas ideias.
 - Campos guiados para problema, público, solução e diferenciais.
 - Configuração de modelo pela interface.
-- Validação mais robusta da estrutura retornada pelo LLM.
-- Streaming da resposta para melhorar percepção de desempenho.
-- Cobertura de testes automatizados.
+- Validação mais robusta da estrutura retornada pela IA.
+- Streaming da resposta.
+- Script de cobertura de testes.
 - Análises adicionais, como proposta de valor, monetização, canais e hipóteses críticas.
 
-## Documentação Complementar
-
-- [PRD do produto](docs/PRD.md)
-- [Arquitetura técnica](docs/ARQUITETURA.md)
-- [Fluxograma de funcionamento](docs/FLUXOGRAMA.md)
-- [Registro de prompts](prompts.md)
-
-## Evidências de Uso de IA no Desenvolvimento
-
-O projeto mantém um registro versionado de prompts em [prompts.md](prompts.md). Esse arquivo documenta o uso de IA nas etapas de requisitos, arquitetura, fluxograma, estrutura inicial, integração com Ollama, testes automatizados, refatoração e documentação.
-
-Além disso, a IA tem papel funcional no produto: a aplicação usa um LLM local via Ollama para gerar a análise da ideia de negócio informada pelo usuário.
-
-## Execução Sem Deploy Obrigatório
-
-Este projeto foi planejado para execução local. Não há exigência de deploy para validar o MVP. Para avaliação, basta instalar as dependências, iniciar o Ollama, baixar o modelo sugerido e executar a aplicação localmente.
+## Documentação complementar
+- [`docs/ESCOPO.md`](docs/ESCOPO.md)
+- [`docs/ARQUITETURA-M1S08.md`](docs/ARQUITETURA-M1S08.md)
+- [`docs/REFATORACAO.md`](docs/REFATORACAO.md)
+- [`docs/ANALISE-CRITICA.md`](docs/ANALISE-CRITICA.md)
+- [`docs/prompts/README.md`](docs/prompts/README.md)
+- [`docs/prompts/01-diagnostico-arquitetura.md`](docs/prompts/01-diagnostico-arquitetura.md)
+- [`docs/prompts/02-definicao-escopo.md`](docs/prompts/02-definicao-escopo.md)
+- [`docs/prompts/03-documentacao-arquitetura.md`](docs/prompts/03-documentacao-arquitetura.md)
+- [`docs/prompts/04-geracao-codigo-ciclo-1.md`](docs/prompts/04-geracao-codigo-ciclo-1.md)
+- [`docs/prompts/05-refinamento-ciclo-2.md`](docs/prompts/05-refinamento-ciclo-2.md)
+- [`docs/prompts/06-refinamento-ciclo-3.md`](docs/prompts/06-refinamento-ciclo-3.md)
+- [`docs/prompts/07-refatoracao.md`](docs/prompts/07-refatoracao.md)
+- [`docs/prompts/08-testes.md`](docs/prompts/08-testes.md)
+- [`docs/prompts/09-lint.md`](docs/prompts/09-lint.md)
+- [`docs/prompts/10-pipeline.md`](docs/prompts/10-pipeline.md)
+- [`docs/prompts/11-analise-critica.md`](docs/prompts/11-analise-critica.md)
+- [`docs/prompts/12-readme.md`](docs/prompts/12-readme.md)
