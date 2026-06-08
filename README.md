@@ -159,6 +159,14 @@ Também existe um modo de observação para desenvolvimento:
 npm run test:watch
 ```
 
+## Qualidade de código
+
+Execute o lint com:
+
+```bash
+npm run lint
+```
+
 ## Como Verificar Cobertura de Testes
 
 No estado atual do projeto, não há script de cobertura configurado no `package.json`.
